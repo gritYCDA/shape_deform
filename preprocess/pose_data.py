@@ -265,7 +265,8 @@ def annotate_test_data(data_dir):
     camera_intrinsics = np.array([[577.5, 0, 319.5], [0, 577.5, 239.5], [0, 0, 1]])
     real_intrinsics = np.array([[591.0125, 0, 322.525], [0, 590.16775, 244.11084], [0, 0, 1]])
     # compute model size
-    model_file_path = ['obj_models/camera_val.pkl', 'obj_models/real_test.pkl']
+    # model_file_path = ['obj_models/camera_val.pkl', 'obj_models/real_test.pkl']
+    model_file_path = ['obj_models/real_test.pkl']
     models = {}
     for path in model_file_path:
         with open(os.path.join(data_dir, path), 'rb') as f:
@@ -277,7 +278,8 @@ def annotate_test_data(data_dir):
     with open(os.path.join(data_dir, 'obj_models/mug_meta.pkl'), 'rb') as f:
         mug_meta = cPickle.load(f)
 
-    subset_meta = [('CAMERA', camera_val, camera_intrinsics, 'val'), ('Real', real_test, real_intrinsics, 'test')]
+    # subset_meta = [('CAMERA', camera_val, camera_intrinsics, 'val'), ('Real', real_test, real_intrinsics, 'test')]
+    subset_meta = [('Real', real_test, real_intrinsics, 'test')]
     for source, img_list, intrinsics, subset in subset_meta:
         valid_img_list = []
         for img_path in tqdm(img_list):
@@ -307,7 +309,11 @@ def annotate_test_data(data_dir):
             gt_class_ids = nocs['gt_class_ids']
             gt_bboxes = nocs['gt_bboxes']
             gt_sRT = nocs['gt_RTs']
-            gt_handle_visibility = nocs['gt_handle_visibility']
+            if 'handle_visibility' in nocs:
+                gt_handle_visibility = nocs['handle_visibility']
+                assert len(nocs['handle_visibility']) == len(gt_class_ids)
+            else:
+                gt_handle_visibility = np.ones_like(gt_class_ids)
             map_to_nocs = []
             for i in range(num_insts):
                 gt_match = -1
@@ -374,10 +380,25 @@ def annotate_test_data(data_dir):
 
 
 if __name__ == '__main__':
-    data_dir = '/home/tianmeng/Documents/pose_ws/object-deformnet/data'
+    data_dir = '/data2/object-deformnet/data'
     # create list for all data
-    create_img_list(data_dir)
+    # create_img_list(data_dir)
     # annotate dataset and re-write valid data to list
-    annotate_camera_train(data_dir)
-    annotate_real_train(data_dir)
+    # annotate_camera_train(data_dir)
+    # annotate_real_train(data_dir)
     annotate_test_data(data_dir)
+
+
+
+
+# (pytorch3d) miruware@devbox:/data2/object-deformnet/preprocess$ python pose_data.py 
+# Write all data paths to file done!
+# 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 275000/275000 [3:21:42<00:00, 22.72it/s]
+# 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4318/4318 [08:03<00:00,  8.93it/s]
+#   0%|                                                                                                                                                                                                      | 0/25000 [00:00<?, ?it/s]
+# Traceback (most recent call last):
+#   File "pose_data.py", line 383, in <module>
+#     annotate_test_data(data_dir)
+#   File "pose_data.py", line 305, in annotate_test_data
+#     with open(nocs_path, 'rb') as f:
+# FileNotFoundError: [Errno 2] No such file or directory: '/data2/object-deformnet/results/nocs_results/val/results_val_00000_0000.pkl'

@@ -2,12 +2,12 @@ import os
 import time
 import argparse
 import torch
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 from lib.auto_encoder import PointCloudAE
 from lib.loss import ChamferLoss
 from data.shape_dataset import ShapeDataset
 from lib.utils import setup_logger
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--num_point', type=int, default=1024, help='number of points, needed if use points')

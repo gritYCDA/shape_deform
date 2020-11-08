@@ -1,0 +1,43 @@
+# Directories #
+/build/
+/bin/
+target/
+ 
+# OS Files #
+.DS_Store
+  
+*.class
+ 
+# Package Files #
+*.jar
+*.war
+*.ear
+*.db
+
+# data # 
+/data/
+/results
+
+# build #
+.idea/
+lib/__pycache__/
+lib/nn_distance/__pycache__/
+lib/nn_distance/build/
+lib/nn_distance/dist/
+lib/nn_distance/nn_distance.egg-info/
+
+      
+# Eclipse #
+.project
+.metadata
+.classpath
+.settings/
+.loadpath
+ 
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+local.properties
+/src/main/resources/rebel.xml

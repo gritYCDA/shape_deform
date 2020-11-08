@@ -5,7 +5,8 @@ import random
 import numpy as np
 import torch
 import torch.nn.functional as F
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 from lib.network import DeformNet
 from lib.loss import Loss
 from data.pose_dataset import PoseDataset
